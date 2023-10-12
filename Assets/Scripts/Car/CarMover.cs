@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.VisualScripting;
+using UnityEngine;
 
 namespace Scripts.Car
 {
@@ -19,14 +20,24 @@ namespace Scripts.Car
         {
             var positionMove = new Vector3(Input.GetAxis(horizontal), Input.GetAxis(vertical));
             _rigidbody2D.velocity = positionMove * _speed;
-            BorderPosition();
+            ClampPosition();
         }
 
-        private void BorderPosition()
+        private void ClampPosition()
         {
             Vector3 carPosition = transform.position;
             transform.position = new Vector3(Mathf.Clamp(carPosition.x, -1, 1), carPosition.y,
                 carPosition.z);
+        }
+
+        private void OnGas() =>
+            _rigidbody2D.AddForce(Vector2.up, ForceMode2D.Force);
+
+        private void OnBack()
+        {
+            var rigidbody2DVelocity = _rigidbody2D.velocity;
+            _rigidbody2D.velocity = new Vector2(rigidbody2DVelocity.x,
+                Mathf.MoveTowards(rigidbody2DVelocity.y, 0, _speed * Time.deltaTime));
         }
     }
 }
