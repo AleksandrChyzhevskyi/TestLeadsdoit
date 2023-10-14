@@ -2,37 +2,23 @@
 {
     public class Healths
     {
-        private readonly int _maxPoint;
-        private readonly int _minPoint;
-        public int Point { get; private set; }
+        private readonly Stats<Healths> _healths;
+        private const int DefaultPoint = 25;
 
-        public Healths(int point, int maxPoint, int minPoint = 0)
-        {
-            _maxPoint = maxPoint;
-            _minPoint = minPoint;
-            Point = point;
-        }
+        public int HealthsCount => _healths.Count;
 
-        public void TakeAway(int value)
-        {
-            if(value < _minPoint)
-                return;
+        public Healths(int count = 100, int mixPoint = 100, int maxPoint = 0) =>
+            _healths = new Stats<Healths>(count, maxPoint, mixPoint);
 
-            if (Point - value < _minPoint)
-                Point = _minPoint;
+        public void Add() => 
+            _healths.Add(DefaultPoint);
 
-            Point -= value;
-        }
+        public void TakeAway() =>
+            _healths.TakeAway(DefaultPoint);
 
-        public void Add(int value)
-        {
-            if(value < _maxPoint)
-                return;
+        public void SetHealths(int point) =>
+            _healths.Add(point);
 
-            if (Point + value > _maxPoint)
-                Point = _maxPoint;
 
-            Point += value;
-        }
     }
 }
